@@ -8,3 +8,7 @@ export interface  MulterFile  {
     path: string;
     size: string;
 }
+
+export interface ExpressUser  { 
+    id: string;
+}

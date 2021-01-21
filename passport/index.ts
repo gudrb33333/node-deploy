@@ -3,8 +3,10 @@ import { local } from './localStrategy';
 import { kakao } from './kakaoStrategy'; 
 import { User } from '../models/user';
 
+import { ExpressUser } from '../interface'
+
 export const passportConfig = () => {
-    passport.serializeUser((user:Express.User, done: any) => {
+    passport.serializeUser((user:ExpressUser , done: any) => {
       done(null, user.id);
     });
   

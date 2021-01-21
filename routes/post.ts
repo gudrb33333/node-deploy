@@ -10,6 +10,7 @@ import { FileManageDetail } from '../models/fileManageDetail'
 import { User } from '../models/user'
 
 import { MulterFile } from '../interface'
+import { ExpressUser } from '../interface'
 
 import { QueryTypes, Sequelize } from 'sequelize';
 import { isLoggedIn } from './middlewares';
@@ -36,7 +37,7 @@ try {
     limits: { fileSize: 25 * 1024 * 1024 },
   });
 
-postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {  files:MulterFile[ ] }, res:Response ,next:NextFunction) => {
+postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {  files:MulterFile[ ] } & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
 
     try{     
       let attachId:string;
@@ -96,7 +97,7 @@ postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {
     });
 
 const upload2 = multer();
-postRouter.post('/', isLoggedIn, upload2.none(), async (req:Request, res:Response ,next:NextFunction) => {
+postRouter.post('/', isLoggedIn, upload2.none(), async (req:Request & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
   try {
 
     const post = await db.Post.create({

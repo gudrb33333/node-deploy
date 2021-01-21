@@ -1,0 +1,309 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="timeline">
+      <form id="hashtag-form" action="/hashtag">
+        <input type="text" name="hashtag" placeholder="태그 검색">
+        <button class="btn">검색</button>
+      </form>
+      <div class="cards-wrap">
+        
+        {% for card in cards %}
+          <div class="card">
+            <input type="hidden" value="{{card.User.id}}" class="card-user-id">
+            <input type="hidden" value="{{card.id}}" class="card-id">
+            <div class="card-author">{{card.User.nick}}</div>
+            {% if not followerIdList.includes(card.User.id) and card.User.id !== user.id %}
+              <button class="card-follow">팔로우하기</button>
+            {% endif %}
+            <div class="card-content">{{card.content}}</div>
+            {% if card.img %}
+              <div class="card-img"><img src="{{card.img}}" alt="섬네일"></div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+      </div>
+
+
+      {% if user %}
+
+      <div class="addpost">
+        <a href="/addpost">+</a>
+      </div>
+        
+        
+      {% endif %}
+    </div>
+   
+
+{% endblock %}
+
+{% block script %}
+  <script src="https://code.jquery.com/jquery-2.2.1.js"></script>
+  <script>
+
+function addpost(){
+
+};
+
+$(window).scroll(function() {
+	console.log( Math.ceil($(window).scrollTop()) + " >= " + ($(document).height() - $(window).height()) );
+	if ( Math.ceil($(window).scrollTop()) >= ($(document).height() - $(window).height()) ) {
+    axios.get('/addCard', {
+         
+        })
+          .then((res) => {
+            
+           for(var i= 0; i<res.data.cards.length; i++){
+            var card = res.data.cards[i];        
+            var html  = "<div class=\"card\">";
+                html += "<input type=\"hidden\" value=\""+card.User.id+"\" class=\"card-user-id\">";
+                html += "<input type=\"hidden\" value=\""+card.id+"\" class=\"card-id\">";
+                html += "<div class=\"card-author\">"+card.User.nick+"</div>";
+                html += "<div class=\"card-content\">"+card.content+"</div>";
+                if(card.img){
+                    html += "<div class=\"card-img\"><img src=\""+card.img+"\" alt=\"섬네일\"></div>";
+                }
+                html += "</div>";
+
+            $('.cards-wrap').append(html);   
+            //oneTime = false;
+          }
+
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+	}
+});
+
+
+
+/*
+
+function YesScroll () {
+const pagination = document.querySelector('.paginaiton');
+const fullContent = document.querySelector('.container');
+const screenHeight = screen.height;
+let oneTime = false;
+document.addEventListener('scroll',OnScroll,{passive:true})
+ function OnScroll () {
+   const fullHeight = fullContent.clientHeight;   
+   const scrollPosition = pageYOffset;
+   if (fullHeight-screenHeight/100000000 <= scrollPosition && !oneTime) {
+     oneTime = true;
+     madeBox();
+   }
+ }
+  function madeBox() {
+
+    axios.get('/addCard', {
+         
+        })
+          .then((res) => {
+            
+           for(var i= 0; i<res.data.cards.length; i++){
+            var card = res.data.cards[i];        
+            var html  = "<div class=\"card\">";
+                html += "<input type=\"hidden\" value=\""+card.User.id+"\" class=\"card-user-id\">";
+                html += "<input type=\"hidden\" value=\""+card.id+"\" class=\"card-id\">";
+                html += "<div class=\"card-author\">"+card.User.nick+"</div>";
+                html += "<div class=\"card-content\">"+card.content+"</div>";
+                if(card.img){
+                    html += "<div class=\"card-img\"><img src=\""+card.img+"\" alt=\"섬네일\"></div>";
+                }
+                html += "</div>";
+
+            $('.cards-wrap').append(html);   
+            //oneTime = false;
+          }
+
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+
+    
+  }
+}
+YesScroll()
+
+*/
+
+
+
+
+
+
+
+/*
+var yesScroll = function () {
+//const pagination = document.querySelector('.paginaiton'); // 페이지네이션 정보획득
+const fullContent = document.querySelector('.container'); // 전체를 둘러싼 컨텐츠 정보획득
+const screenHeight = screen.height; // 화면 크기
+let oneTime = false; // 일회용 글로벌 변수
+document.addEventListener('scroll',OnScroll,{passive:true}) // 스크롤 이벤트함수정의
+ function OnScroll () { //스크롤 이벤트 함수
+   const fullHeight = fullContent.clientHeight; // infinite 클래스의 높이   
+   const scrollPosition = pageYOffset; // 스크롤 위치
+   if (fullHeight-screenHeight/10000000 <= scrollPosition && !oneTime) { // 만약 전체높이-화면높이/2가 스크롤포지션보다 작아진다면, 그리고 oneTime 변수가 거짓이라면
+     oneTime = true; // oneTime 변수를 true로 변경해주고,
+    
+
+
+     axios.get('/addCard', {
+         
+        })
+          .then((res) => {
+            
+           for(var i= 0; i<res.data.cards.length; i++){
+            var card = res.data.cards[i];        
+            var html  = "<div class=\"card\">";
+                html += "<input type=\"hidden\" value=\""+card.User.id+"\" class=\"card-user-id\">";
+                html += "<input type=\"hidden\" value=\""+card.id+"\" class=\"card-id\">";
+                html += "<div class=\"card-author\">"+card.User.nick+"</div>";
+                html += "<div class=\"card-content\">"+card.content+"</div>";
+                if(card.img){
+                    html += "<div class=\"card-img\"><img src=\""+card.img+"\" alt=\"섬네일\"></div>";
+                }
+                html += "</div>";
+
+            $('.cards-wrap').append(html);   
+            oneTime = false;
+          }
+
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+
+          
+   }
+  
+ }
+ }();
+
+*/
+
+/*
+$(window).scroll(function() {
+        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+     
+          axios.get('/addCard', {
+         
+        })
+          .then((res) => {
+            
+           for(var i= 0; i<res.data.cards.length; i++){
+            var card = res.data.cards[i];        
+            var html  = "<div class=\"card\">";
+                html += "<input type=\"hidden\" value=\""+card.User.id+"\" class=\"card-user-id\">";
+                html += "<input type=\"hidden\" value=\""+card.id+"\" class=\"card-id\">";
+                html += "<div class=\"card-author\">"+card.User.nick+"</div>";
+                html += "<div class=\"card-content\">"+card.content+"</div>";
+                if(card.img){
+                    html += "<div class=\"card-img\"><img src=\""+card.img+"\" alt=\"섬네일\"></div>";
+                }
+                html += "</div>";
+
+            $('.cards-wrap').append(html);   
+
+          }
+
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        }
+    });
+
+
+    if (document.getElementById('img')) {
+      document.getElementById('img').addEventListener('change', function(e) {
+        const formData = new FormData();
+        console.log(this, this.files);
+        formData.append('img', this.files[0]);
+        axios.post('/post/img', formData)
+          .then((res) => {
+            document.getElementById('img-url').value = res.data.url;
+            document.getElementById('img-preview').src = res.data.url;
+            document.getElementById('img-preview').style.display = 'inline';
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      });
+    }
+    document.querySelectorAll('.twit-follow').forEach(function(tag) {
+      tag.addEventListener('click', function() {
+        const myId = document.querySelector('#my-id');
+        if (myId) {
+          const userId = tag.parentNode.querySelector('.twit-user-id').value;
+          if (userId !== myId.value) {
+            if (confirm('팔로잉하시겠습니까?')) {
+              axios.post(`/user/${userId}/follow`)
+                .then(() => {
+                  location.reload();
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            }
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.twit').forEach(function(row){
+      row.addEventListener('click',function(){
+        console.log('test');
+      })
+    });
+    */
+    
+/*
+    var CheckIfScrollBottom = debouncer(function() {
+    if(false) { 
+
+        axios.get('/addCard', {
+         
+        })
+          .then((res) => {
+            
+           for(var i= 0; i<res.data.cards.length; i++){
+            var card = res.data.cards[i];        
+            var html  = "<div class=\"card\">";
+                html += "<input type=\"hidden\" value=\""+card.User.id+"\" class=\"card-user-id\">";
+                html += "<input type=\"hidden\" value=\""+card.id+"\" class=\"card-id\">";
+                html += "<div class=\"card-author\">"+card.User.nick+"</div>";
+                html += "<div class=\"card-content\">"+card.content+"</div>";
+                if(card.img){
+                    html += "<div class=\"card-img\"><img src=\""+card.img+"\" alt=\"섬네일\"></div>";
+                }
+                html += "</div>";
+
+            $('.cards-wrap').append(html);   
+
+          }
+
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+       console.log('Bottom!');
+    }
+    },100);
+
+document.addEventListener('scroll',CheckIfScrollBottom);
+
+function debouncer(a,b,c){var d;return function(){var e=this,f=arguments,g=function(){d=null,c||a.apply(e,f)},h=c&&!d;clearTimeout(d),d=setTimeout(g,b),h&&a.apply(e,f)}}
+function getScrollXY(){var a=0,b=0;return"number"==typeof window.pageYOffset?(b=window.pageYOffset,a=window.pageXOffset):document.body&&(document.body.scrollLeft||document.body.scrollTop)?(b=document.body.scrollTop,a=document.body.scrollLeft):document.documentElement&&(document.documentElement.scrollLeft||document.documentElement.scrollTop)&&(b=document.documentElement.scrollTop,a=document.documentElement.scrollLeft),[a,b]}
+function getDocHeight(){var a=document;return Math.max(a.body.scrollHeight,a.documentElement.scrollHeight,a.body.offsetHeight,a.documentElement.offsetHeight,a.body.clientHeight,a.documentElement.clientHeight)}
+*/
+  </script>
+{% endblock %}

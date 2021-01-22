@@ -75,12 +75,13 @@ postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {
         let fileLength:number = req.files[i].originalname.length;
         let lastDot:number = req.files[i].originalname.lastIndexOf('.');
         let FileExtsion:string = req.files[i].originalname.substring(lastDot+1, fileLength);
+        let streFileNm:string = req.files[i].key.split('/')[req.files[i].key.split('/').length - 1 ];
 
         await FileManageDetail.create({   
           atchFileId:	attachId,
           FileSn: result2[0].fileSn+i,	
           FileStreCours: req.files[i].location,
-          StreFileNm	: req.files[i].key,
+          StreFileNm	: streFileNm,
           OrignlFileNm: req.files[i].originalname,	
           FileExtsn	: FileExtsion,
           FileSize	: req.files[i].size

@@ -4,9 +4,11 @@ export interface  MulterFile  {
     encoding: string;
     mimetype: string;
     destination: string;
+    location : string;
     filename: string;
     path: string;
     size: string;
+    key: string;
 }
 
 export interface ExpressUser  { 

@@ -3,6 +3,8 @@ import * as multer from 'multer';
 import * as sharp from 'sharp'
 import * as path from 'path';
 import * as fs from 'fs';
+import * as AWS from 'aws-sdk'
+import * as multerS3 from 'multer-s3'
 
 import { db } from '../models';
 import { FileManage } from '../models/fileManage'
@@ -17,28 +19,32 @@ import { isLoggedIn } from './middlewares';
 
 export const postRouter:Router = Router();
 
-try {
+  try {
     fs.readdirSync('uploads');
   } catch (error) {
     console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
     fs.mkdirSync('uploads');
   }
 
+  AWS.config.update({
+      accessKeyId:process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey:process.env.S3_SECRET_ACCESS_KEY,
+      region:'ap-northeast-2'
+  });
+
   const upload = multer({
-    storage: multer.diskStorage({
-      destination(req:Request, file:Express.Multer.File, cb: Function) {
-        cb(null, 'uploads/');
-      },
-      filename(req:Request, file:Express.Multer.File, cb: Function) {
-        const ext:string = path.extname(file.originalname);
-        cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
-      },
+    storage: multerS3({
+      s3:new AWS.S3(),
+      bucket: 'gudrb33333',
+      key(req:Request, file:Express.Multer.File, cb:Function){
+        cb(null,`original/${Date.now()}${path.basename(file.originalname)}`);
+      }
     }),
     limits: { fileSize: 25 * 1024 * 1024 },
   });
 
 postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {  files:MulterFile[ ] } & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
-
+    console.log(req.files);
     try{     
       let attachId:string;
 
@@ -66,15 +72,15 @@ postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {
 
 
       for(let i:number=0; i<req.files.length; i++){
-        let fileLength:number = req.files[i].filename.length;
-        let lastDot:number = req.files[i].filename.lastIndexOf('.');
-        let FileExtsion:string = req.files[i].filename.substring(lastDot+1, fileLength);
+        let fileLength:number = req.files[i].originalname.length;
+        let lastDot:number = req.files[i].originalname.lastIndexOf('.');
+        let FileExtsion:string = req.files[i].originalname.substring(lastDot+1, fileLength);
 
         await FileManageDetail.create({   
           atchFileId:	attachId,
           FileSn: result2[0].fileSn+i,	
-          FileStreCours: req.files[i].destination,
-          StreFileNm	: req.files[i].filename,
+          FileStreCours: req.files[i].location,
+          StreFileNm	: req.files[i].key,
           OrignlFileNm: req.files[i].originalname,	
           FileExtsn	: FileExtsion,
           FileSize	: req.files[i].size
@@ -82,7 +88,7 @@ postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {
 
        atchFileArray.push({ 
           atchFileId: attachId,
-          url:`/img/${req.files[i].filename}`,
+          url: req.files[i].location,
           fileSn: result2[0].fileSn+i
         });
 

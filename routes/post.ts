@@ -1,6 +1,5 @@
 import {Request, Response, NextFunction, Router} from 'express'
 import * as multer from 'multer';
-import * as sharp from 'sharp'
 import * as path from 'path';
 import * as fs from 'fs';
 import * as AWS from 'aws-sdk'

@@ -1,28 +1,94 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/addpost.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">
+  </head>
+<body>
+    <div class="container">
+      <form id="card-form" action="/post" method="post" enctype="multipart/form-data">
+      <div class="header-wrap">  
+        <table>
+          <th><a id="" href="javascript:history.back();" class="btn">뒤로가기</a></th>
+          <th><h3>중고거래 글쓰기</h3></th>
+          <th><button id="card-btn" type="submit" class="btn">완료</button></th>
+        </table>
+      </div>
 
-{% block content %}
-<div>
-    <form id="card-form" action="/post" method="post" enctype="multipart/form-data">
-      <div class="input-group">
-        <textarea id="card" name="content" maxlength="140"></textarea>
-      </div>
-      <div class="img-preview">
-        
-      </div>
       <div>
-        <label id="img-label" for="img">사진 업로드</label>
-        <input id="img" type="file" accept="image/*" attachId="{{card.img}}" multiple>
-        <button id="card-btn" type="submit" class="btn">짹짹</button>
+        <div class="input-group">
+          <div class="img-container">
+            <label id="img-label" for="img">사진 업로드</label>
+            <input name="img" id="img" type="file" accept="image/*" attachId="{{card.img}}" multiple>
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+
+              </div>
+            </div>
+          </div>    
+            <input name="title" type="text" placeholder="제목"/>
+            <input name="category" style="font-weight:bold" type="text"   placeholder="카테고리"/>
+            <input name="price" type="number" placeholder="₩ 가격(선택사항)">
+            <textarea  name="content" id="card" maxlength="540"></textarea>
+          </div>
       </div>
-    </form>
-  </div>
-{% endblock %}
+      
+      </form>
+    </div>
 
 
 {% block script %}
+  <script src="https://code.jquery.com/jquery-2.2.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
   <script>
+
+
       if (document.getElementById('img')) {
       document.getElementById('img').addEventListener('change', function(e) {
+
+        console.log(e.target.files);
+
+        const fileArr = Array.from(e.target.files);
+
+        for(let i=0;i < fileArr.length; i++){
+          
+          let fileReader = new FileReader(fileArr[i]);
+          fileReader.onload = function(e){
+          let html =   "<div class=\"swiper-slide\"><img id=\"img-preview\" src=\""+e.target.result+"\" style=\"display: inline;\" height=\"60\"width=\"60\" alt=\"미리보기\"></div>";
+              $('.swiper-wrapper').append(html);       
+              var swiper = new Swiper('.swiper-container', {
+              slidesPerView: 4,
+              spaceBetween: 5,
+              freeMode: true,    
+              });    
+          }
+          
+          fileReader.readAsDataURL(e.target.files[i]);
+          
+        }
+
+
+       
+
+       /* 
+        var fileReader = new FileReader();
+
+        fileReader.onload = function(e){
+          let html  = "<div id=\"img-div\">";
+              html +=   "<img id=\"img-preview\" src=\""+e.target.result+"\" style=\"display: inline;\" width=\"250\" alt=\"미리보기\">";
+              html += "</div>";
+
+              $('.img-preview').append(html); 
+        }
+
+        fileReader.readAsDataURL(e.target.files[0]);
+         */
+
+        /*
         const formData = new FormData();
         console.log(this, this.files);
         for(var i=0; i<this.files.length;i++){
@@ -45,6 +111,7 @@
           .catch((err) => {
             console.error(err);
           });
+          */
       });
     }
   </script>

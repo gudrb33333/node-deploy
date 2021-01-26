@@ -12,14 +12,17 @@
           <div class="card">
             <input type="hidden" value="{{card.User.id}}" class="card-user-id">
             <input type="hidden" value="{{card.id}}" class="card-id">
-            <div class="card-author">{{card.User.nick}}</div>
+            
+            {% if card.img %}
+              <div class="card-img"><img src="{{card.repImg}}" alt="섬네일"></div>
+            {% endif %}
+            
+            <div class="card-author"></div>
             {% if not followerIdList.includes(card.User.id) and card.User.id !== user.id %}
-              <button class="card-follow">팔로우하기</button>
+              <button class="card-follow">관심</button>
             {% endif %}
             <div class="card-content">{{card.content}}</div>
-            {% if card.img %}
-              <div class="card-img"><img src="{{card.img}}" alt="섬네일"></div>
-            {% endif %}
+            
           </div>
         {% endfor %}
 

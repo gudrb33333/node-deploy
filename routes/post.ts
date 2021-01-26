@@ -42,12 +42,12 @@ export const postRouter:Router = Router();
     limits: { fileSize: 25 * 1024 * 1024 },
   });
 
-postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {  files:MulterFile[ ] } & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
+postRouter.post('/', isLoggedIn, upload.array('img'), async (req:Request &  {  files:MulterFile[ ] } & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
     console.log(req.files);
     try{     
-      let attachId:string;
 
       //만약 req.body에 attachId값이 없다면 DB에서 찾아옴
+      /*
       if(!req.body.attachId[0]){
          let result1:FileManage = await <FileManage><any>FileManage.create({
          useAt: 'Y',
@@ -57,44 +57,76 @@ postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {
       }else{
          attachId = req.body.attachId;
       }
+    */
+
+      let result1:FileManage = await <FileManage><any>FileManage.create({
+        useAt: 'Y',
+        UserId: req.user.id,
+       });
+       let attachId:string = result1.id;
 
       //db에서 찾은 attachId의 최대값에서 +1
+      /*
       let result2:FileManageDetail[] = await <FileManageDetail[]><any>db.sequelize.query(
         "SELECT IFNULL(MAX(fileSn),0)+1 as fileSn  FROM `FileManageDetail` WHERE atchFileid = :atchFileid"
         ,{ 
         replacements: { atchFileid: attachId },
         type: QueryTypes.SELECT ,
       });  
+      */
 
       //FileManageDetail 테이블에 fileSn로 순차적으로 인설트
       let atchFileArray = new Array();
-
+      let repImg:string;
 
       for(let i:number=0; i<req.files.length; i++){
         let fileLength:number = req.files[i].originalname.length;
         let lastDot:number = req.files[i].originalname.lastIndexOf('.');
         let FileExtsion:string = req.files[i].originalname.substring(lastDot+1, fileLength);
         let streFileNm:string = req.files[i].key.split('/')[req.files[i].key.split('/').length - 1 ];
+        repImg = req.files[0].location.replace(/\/original\//,'/thumb/');
 
         await FileManageDetail.create({   
           atchFileId:	attachId,
-          FileSn: result2[0].fileSn+i,	
+          FileSn: i,	
           FileStreCours: req.files[i].location,
           StreFileNm	: streFileNm,
           OrignlFileNm: req.files[i].originalname,	
           FileExtsn	: FileExtsion,
           FileSize	: req.files[i].size
         });
-
+        /*
        atchFileArray.push({ 
           atchFileId: attachId,
-          url: req.files[i].location,
-          fileSn: result2[0].fileSn+i
+          url: req.files[i].location.replace(/\/original\//,'/thumb/'),
+          fileSn: i
         });
-
+      */
       }
 
-      res.json({ atchFileArray: atchFileArray} );
+    const post = await db.Post.create({
+      title: req.body.title,
+      category: req.body.category,
+      price: req.body.price,
+      content: req.body.content,
+      img: attachId,
+      repImg: repImg,
+      UserId: req.user.id,
+    });
+    const hashtags = req.body.content.match(/#[^\s#]*/g);
+    if (hashtags) {
+      const result = await Promise.all(
+        hashtags.map((tag: string) => {
+          return db.Hashtag.findOrCreate({
+            where: { title: tag.slice(1).toLowerCase() },
+          })
+        }),
+      );
+      //await post.addHashtags(result.map(r => r[0]));
+    }
+    res.redirect('/');
+
+      //res.json({ atchFileArray: atchFileArray} );
     
       }catch(error){
         console.error(error);
@@ -103,12 +135,11 @@ postRouter.post('/img', isLoggedIn, upload.array('img'), async (req:Request &  {
     });
 
 const upload2 = multer();
-postRouter.post('/', isLoggedIn, upload2.none(), async (req:Request & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
+postRouter.post('/none', isLoggedIn, upload2.none(), async (req:Request & {  user: ExpressUser }, res:Response ,next:NextFunction) => {
   try {
 
     const post = await db.Post.create({
       content: req.body.content,
-      img: req.body.url,
       UserId: req.user.id,
     });
     const hashtags = req.body.content.match(/#[^\s#]*/g);

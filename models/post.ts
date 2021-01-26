@@ -5,9 +5,22 @@ export class Post extends Model{
 
     public content? : string;
     public img? : string;
+    public repImg? : string;
     
     static makeTable(sequelize: Sequelize){
         Post.init({
+            title:{
+                type: DataTypes.STRING(140),
+                allowNull: false
+            },
+            category:{
+                type: DataTypes.STRING(140),
+                allowNull: false
+            },
+            price:{
+                type: DataTypes.INTEGER,
+                allowNull: true
+            },
             content:{
                 type: DataTypes.STRING(140),
                 allowNull: false
@@ -16,7 +29,10 @@ export class Post extends Model{
                 type: DataTypes.STRING(200),
                 allowNull: true
             },
-
+            repImg: {
+                type: DataTypes.STRING(200),
+                allowNull: true
+            },
         },{
             sequelize,
             timestamps: true,

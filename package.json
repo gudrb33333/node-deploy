@@ -4,9 +4,8 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=8145 pm2 start app.ts",
-    "dev": "nodemon server",
-    "test": "jest"
+    "start": "cross-env NODE_ENV=production PORT=8145 pm2 start app.ts -i -1",
+    "test": "cross-env NODE_ENV=production PORT=8145 'ts-node' app.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,163 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+.btn {
+  display: inline-block;
+  padding: 0 5px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  background: white;
+  border: 1px solid silver;
+  color: crimson;
+  height: 37px;
+  line-height: 37px;
+  vertical-align: top;
+  font-size: 12px;
+}
+input[type='text'], input[type='number'], input[type='password'], textarea {
+  
+  height: 78px;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid silver;
+  font-size: 16px;
+}
+.container { width: 100%; height: 100%; }
+@media screen and (min-width: 800px) {
+  .container { width: 800px; margin: 0 auto; }
+}
+.input-group { margin-bottom: 15px; }
+.input-group label { width: 22%; display: inline-block; }
+.input-group input { width: 100%; }
+.half { float: left; width: 50%; margin: 10px 0; }
+#join { float: right; }
+.profile-wrap {
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px 0;
+}
+
+.header-wrap {
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px 0;
+}
+
+.header-wrap table{
+  width: 100%;
+}
+
+
+@media screen and (min-width: 800px) {
+  .profile-wrap { width: 290px; margin-bottom: 0; }
+}
+.profile {
+  text-align: left;
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 4px;
+  border: 1px solid silver;
+  background: lightcoral;
+}
+.user-name { font-weight: bold; font-size: 18px; }
+.count { font-weight: bold; color: crimson; font-size: 18px; }
+.timeline {
+  margin-top: 10px;
+  width: 100%;
+  display: inline-block;
+  border-radius: 4px;
+  vertical-align: top;
+}
+@media screen and (min-width: 800px) { .timeline { width: 500px; } }
+#card-form {
+  border-bottom: 1px solid silver;
+  padding: 5px;
+
+  overflow: hidden;
+}
+#img-preview { max-width: 100%; }
+#img-label {
+  float: left;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid crimson;
+  padding: 0 10px;
+  color: white;
+  font-size: 12px;
+  height: 84px;
+  line-height: 37px;
+}
+#img { display: none; }
+#card { width: 100%; min-height: 172px; }
+#card-btn {
+  float: right;
+  color: white;
+  background: crimson;
+  border: none;
+}
+.card {
+  border: 1px solid silver;
+  border-radius: 4px;
+  padding: 10px;
+  position: relative;
+  margin-bottom: 10px;
+}
+.card-author { display: inline-block; font-weight: bold; margin-right: 10px; }
+.card-follow {
+  padding: 1px 5px;
+  background: #fff;
+  border: 1px solid silver;
+  border-radius: 5px;
+  color: crimson;
+  font-size: 12px;
+  cursor: pointer;
+}
+.card-img { text-align: center; }
+.card-img img { max-width: 75%; }
+.error-message { color: red; font-weight: bold; }
+#search-form { text-align: right; }
+#join-form { padding: 10px; text-align: center; }
+#hashtag-form { text-align: right; }
+footer { position: fixed; 
+        left: 0px;
+        bottom: 0px;
+        height: 60px;
+        width: 100%;
+        background: gray;
+        color: white;}
+.addpost{
+  position: fixed;
+  left: 80%;
+  bottom: 80px;
+  height: 60px;
+  width: 18%;
+  background: #FF5722;
+  color: white;
+  border-radius: 50px;
+}
+
+.img-container {
+  padding-bottom:12px
+}
+
+
+.swiper-container {
+	height:84px;
+	border-radius:7px;
+	box-shadow:0 0 10px #ccc inset;
+}
+.swiper-slide {
+	text-align:center;
+	display:flex; /* 내용을 중앙정렬 하기위해 flex 사용 */
+	align-items:center; /* 위아래 기준 중앙정렬 */
+	justify-content:center; /* 좌우 기준 중앙정렬 */
+}
+.swiper-slide img {
+	box-shadow:0 0 5px #555;
+	max-width:100%; /* 이미지 최대너비를 제한, 슬라이드에 이미지가 여러개가 보여질때 필요 */
+	/* 이 예제에서 필요해서 설정했습니다. 상황에따라 다를 수 있습니다. */
+}
+
+        
